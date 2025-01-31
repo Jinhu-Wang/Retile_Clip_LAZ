@@ -24,12 +24,10 @@ project_directory/
 │
 ├── 3rd_party/      # The third party software, i.e. LAStools, shapelib.
 |
-|
 ├── clipping/      # Holds the clipping scripts.
 |      ├── src/    # Source codes.
 |      |
 |      └── CMakeLists.txt   # Making configuration using CMake.
-|
 |
 └── retiling/                                 # Directory holds the source codes
     ├── retile_by_count/                      # C++ scripts of retile by number of tiles
