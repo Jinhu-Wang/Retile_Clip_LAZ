@@ -64,16 +64,46 @@ To use the scripts, a `C++` compiler, i.e. `g++`,`gcc`, `mscv`, `clang++`, etc.,
   Then you should have obtained a usable project and just build it. I recommend using
   [CLion](https://www.jetbrains.com/clion/) or [QtCreator](https://www.qt.io/product). For Windows users: your IDE must be set for `x64`.
 
-### Module 1: [TreeClassification]
+### Module 1: [clipping]
 
-This module classifies the original points from the AHN4 point clouds to **[trees&shrubs]** and **[others]** in Oostvaardersplassen marsh area.
+This module clips the LiDAR point clouds in LAS/LAS format w.r.t. the polygons (with \*.shp format).
 
-There are three parameters:
+There are two parameters to specify:
 
 ```
-    search_radius: The neighbourhood size for determing number of points and clustering;
-    num_pts_per_cluster: The minimum number of points per cluster;
-    mean_height_cluster: To filter the obtained clusters that have low height.
+    std::string shp_file_path:  The full path to the shapefile;
+    std::string las_dir:        The full path to the directory of LAS/LAZ files;
+```
+
+```javascript {.line-numbers}
+int main(int argc, char **argv)
+{
+    // Specify the directory to the shapefile [*.shp] file;
+    std::string shpFilePath = "/directory/to/shapefile.shp";
+    // Specify the directory to the LAS/LAZ files;
+    std::string lasDir = "/directory/to/las/files/";
+
+    // Instantiate the clipping object;
+    mm::ClipLas *clip = new mm::ClipLas;
+
+    clip->getAllLasFiles(lasDir);
+
+    clip->setShpFilePath(shpFilePath);
+    clip->readShpFile();
+    clip->getPositivePolygons();
+    clip->setLasFileDirName(lasDir);
+    clip->runClipping();
+
+    // Clean the memory;
+    if (clip)
+    {
+        delete clip;
+        clip = nullptr;
+    }
+
+    return 0;
+}
+
 ```
 
 ### Module 2: [TreeIndividualization]

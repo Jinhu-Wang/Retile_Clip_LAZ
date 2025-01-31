@@ -35,52 +35,6 @@ namespace mm
         this->m_clippedLasFileDir = clippedDir;
     }
 
-    bool ClipLas::readShpFile()
-    {
-        SHPHandle shpHandle = SHPOpen(this->m_shpFilePath.c_str(), "rb");
-
-        if (shpHandle == nullptr)
-            return false;
-
-        this->m_bbox.min_point()[0] = shpHandle->adBoundsMin[0];
-        this->m_bbox.min_point()[1] = shpHandle->adBoundsMin[1];
-
-        this->m_bbox.max_point()[0] = shpHandle->adBoundsMax[0];
-        this->m_bbox.max_point()[1] = shpHandle->adBoundsMax[1];
-
-        if (shpHandle->nShapeType == SHPT_POLYGON)
-        {
-            SHPObject *psShape = nullptr;
-            for (int i = 0; i < shpHandle->nRecords; ++i)
-            {
-                psShape = SHPReadObject(shpHandle, i);
-                std::vector<int> parts;
-                std::vector<int> partType;
-                for (int j = 0; j < psShape->nParts; ++j)
-                {
-                    parts.push_back(psShape->panPartStart[j]);
-                    partType.push_back(psShape->panPartType[j]);
-                }
-
-                ShpPolygon2 polygon;
-                for (int j = 0; j < psShape->nVertices; ++j)
-                {
-                    dvec2 pt;
-                    pt.x = psShape->padfX[j];
-                    pt.y = psShape->padfY[j];
-                    polygon.push_back(pt);
-                }
-                bool signs = polygon.is_clockwise();
-
-                this->m_polygons.push_back(polygon);
-            }
-            SHPDestroyObject(psShape);
-        }
-        SHPClose(shpHandle);
-
-        return true;
-    }
-
     bool ClipLas::isPtInPolygon(double x, double y)
     {
         SHPHandle shpHandle = SHPOpen(this->m_shpFilePath.c_str(), "rb");
@@ -139,7 +93,7 @@ namespace mm
         return true;
     }
 
-    bool ClipLas::readShpFile2()
+    bool ClipLas::readShpFile()
     {
         SHPHandle hSHP = SHPOpen(this->m_shpFilePath.c_str(), "rb");
         if (hSHP == nullptr)
@@ -276,24 +230,6 @@ namespace mm
             return false;
         }
 
-        // std::string clippedDir = this->m_lasFileDirName + "/Clipped/";
-        // if (std::filesystem::is_directory(clippedDir.c_str()))
-        //{
-        //    this->m_clippedLasFileDir = clippedDir;
-        //}
-        // else
-        //{
-        //    if (std::filesystem::create_directory(clippedDir.c_str()))
-        //    {
-        //        this->m_clippedLasFileDir = clippedDir;
-        //    }
-        //    else
-        //    {
-        //        std::cout << "Error in creating subfolder [Clipped]" << std::endl;
-        //        return false;
-        //    }
-        //}
-
         if (!std::filesystem::is_directory(this->m_clippedLasFileDir.c_str()))
         {
             if (!std::filesystem::create_directory(this->m_clippedLasFileDir.c_str()))
@@ -342,24 +278,6 @@ namespace mm
         }
         closedir(dir);
 
-        // std::string clippedDir = pathName + "/Clipped/";
-        // struct stat info;
-        // if (stat(clippedDir.c_str(), &info) == 0 && S_ISDIR(info.st_mode))
-        //{
-        // this->m_clippedLasFileDir = clippedDir;
-        //}
-        // else
-        //{
-        // if (mkdir(clippedDir.c_str(), 0770) == 0)
-        //{
-        // this->m_clippedLasFileDir = clippedDir;
-        //}
-        // else
-        //{
-        // return false;
-        //}
-        //}
-
         if (mkdir(this->m_clippedLasFileDir.c_str(), 0770) != 0)
         {
             std::cout << "Error in creating the designiated output folder" << std::endl;
@@ -371,175 +289,6 @@ namespace mm
     }
 
     bool ClipLas::runClipping()
-    {
-
-        return true;
-    }
-
-    bool ClipLas::runClipping2()
-    {
-        if (this->m_lasFiles.empty())
-            return false;
-        if (this->m_polygons.empty())
-            return false;
-        if (this->m_positivePolygons.empty())
-            return false;
-
-        for (auto &file : this->m_lasFiles)
-        {
-            std::filesystem::path pathObj(file);
-            std::string fileName = pathObj.stem();
-            std::string fileOutputPath = this->m_clippedLasFileDir + fileName + ".laz";
-
-            LASreadOpener readOpener;
-            readOpener.set_file_name(file.c_str(), true);
-            LASreader *reader = readOpener.open();
-            if (!reader || reader->npoints == 0)
-            {
-                reader->close();
-                delete reader;
-                reader = nullptr;
-                continue;
-            }
-
-            ShpPolygon2 bbxLasFile;
-            dvec2 vertex;
-            vertex.x = reader->header.min_x;
-            vertex.y = reader->header.min_y;
-            bbxLasFile.push_back(vertex);
-            vertex.x = reader->header.min_x;
-            vertex.y = reader->header.max_y;
-            bbxLasFile.push_back(vertex);
-            vertex.x = reader->header.max_x;
-            vertex.y = reader->header.max_y;
-            bbxLasFile.push_back(vertex);
-            vertex.x = reader->header.max_x;
-            vertex.y = reader->header.min_y;
-            bbxLasFile.push_back(vertex);
-
-            LASwriteOpener writeOpener;
-            writeOpener.set_file_name(fileOutputPath.c_str());
-            LASwriter *writer = writeOpener.open(&reader->header);
-            int numPtInPolygon = 0;
-
-            std::vector<int> idxPositivePlg;
-            for (int i = 0; i < this->m_positivePolygons.size(); ++i)
-            {
-                if (this->m_positivePolygons.at(i).contains(bbxLasFile) &&
-                    !bbxLasFile.intersects(this->m_positivePolygons.at(i)))
-                {
-                    bool IsIntersect = false;
-                    for (int j = 0; j < this->m_positivePolygons.at(i).indices.size(); ++j)
-                    {
-                        int index = this->m_positivePolygons.at(i).indices.at(j);
-                        if (this->m_negativePolygons.at(index).intersects(bbxLasFile))
-                        {
-                            IsIntersect = true;
-                            break;
-                        }
-                    }
-                    if (!IsIntersect)
-                    {
-                        idxPositivePlg.push_back(i);
-                        // std::filesystem::copy_file(file, fileOutputPath);
-                        while (reader->read_point())
-                        {
-                            LASpoint lasPt;
-                            lasPt.init(&reader->header,
-                                       reader->header.point_data_format,
-                                       reader->header.point_data_record_length,
-                                       nullptr);
-                            lasPt = reader->point;
-                            writer->write_point(&lasPt);
-                            writer->update_inventory(&lasPt);
-                            numPtInPolygon++;
-                        }
-
-                        break;
-                    }
-                    else
-                    {
-                        if (!this->m_positivePolygons.at(i).empty())
-                        {
-                            idxPositivePlg.push_back(i);
-                        }
-                    }
-                }
-                else if (this->m_positivePolygons.at(i).intersects(bbxLasFile) ||
-                         bbxLasFile.intersects(this->m_positivePolygons.at(i)) ||
-                         bbxLasFile.contains(this->m_positivePolygons.at(i)))
-                {
-                    if (!this->m_positivePolygons.at(i).empty())
-                    {
-                        idxPositivePlg.push_back(i);
-                    }
-                }
-            }
-            if (idxPositivePlg.empty())
-            {
-                std::filesystem::remove(fileOutputPath.c_str());
-                continue;
-            }
-
-            dvec2 pt;
-            while (reader->read_point())
-            {
-                pt.x = reader->point.get_x();
-                pt.y = reader->point.get_y();
-
-                bool IsInPlg = false;
-                bool IsInNegativePlg = false;
-
-                for (int i = 0; i < idxPositivePlg.size(); ++i)
-                {
-                    int idPlg = idxPositivePlg.at(i);
-                    if (!this->m_positivePolygons.at(idPlg).contains(pt))
-                        continue;
-                    IsInPlg = true;
-                    IsInNegativePlg = false;
-                    for (int k = 0; k < this->m_positivePolygons.at(idPlg).indices.size(); ++k)
-                    {
-                        int id = this->m_positivePolygons.at(idPlg).indices.at(k);
-                        if (this->m_negativePolygons.at(id).contains(pt))
-                        {
-                            IsInNegativePlg = true;
-                            break;
-                        }
-                    }
-                }
-                if (IsInPlg && !IsInNegativePlg)
-                {
-                    LASpoint lasPt;
-                    lasPt.init(&reader->header,
-                               reader->header.point_data_format,
-                               reader->header.point_data_record_length,
-                               nullptr);
-                    lasPt = reader->point;
-                    writer->write_point(&lasPt);
-                    writer->update_inventory(&lasPt);
-                    numPtInPolygon++;
-                }
-            }
-
-            idxPositivePlg.clear();
-            writer->update_header(&reader->header, true);
-            writer->close();
-            delete writer;
-            writer = nullptr;
-
-            reader->close();
-            delete reader;
-            reader = nullptr;
-
-            if (numPtInPolygon == 0)
-            {
-                std::filesystem::remove(fileOutputPath.c_str());
-            }
-        }
-        return true;
-    }
-
-    bool ClipLas::runClipping3()
     {
         if (this->m_lasFiles.empty())
             return false;

@@ -22,12 +22,9 @@ namespace mm
         void setLasFileDirName(std::string lasFileDirName);
         void setLasFileDirName(std::string lasFileDirName, std::string clippedFileDir);
         bool readShpFile();
-        bool readShpFile2();
         bool readPolygonsFromShpFile();
         bool getPositivePolygons();
         bool runClipping();
-        bool runClipping2();
-        bool runClipping3();
 
     private:
     public:

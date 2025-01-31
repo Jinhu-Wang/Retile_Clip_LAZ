@@ -89,37 +89,11 @@ private:
     DBFHandle hDBF;
 };
 
-int main12121()
-{
-    std::string shpFilePath = "/home/jinhu/Work/Data/2023.10.25-AHN4/Kaartbladen_AHN4_poly/Kaartbladen_AHN4_poly.shp";
-    ShapefileReader reader(shpFilePath.c_str());
-    // reader.ReadPolygons();
-    reader.ReadPolygonProperty();
-    return 0;
-}
-
 int main(int argc, char **argv)
 {
-    // French Data;
-    // std::string lasDir = "/home/jinhu/Work/Data/2023.04.19-MAMBO/FR/LIDARHD_1-0_LAZ_MQ-0740_6249-2021/";
-    // std::string shpFilePath = "/home/jinhu/Work/Data/2023.04.19-MAMBO/FR/FR_Bagnas_fusionne/perimetre_bagnas_fusionne_20221123.shp";
 
-    // std::string shpFilePath = "/home/jinhu/Work/Data/2023.04.19-MAMBO/FR/FR_Bagnas_fusionne/perimetre_bagnas_fusionne_20221123.shp";
-    // std::string lasDir = "/home/jinhu/Work/Data/2023.04.19-MAMBO/NL/LiDAR/";
-    // std::string shpFilePath = "/home/jinhu/Work/Data/2023.04.28-Oost_8cm_images/polygons/marsh_excluding_water_infrastruct_pioneer_final/marsh_excluding_water_infrastruct_pioneer_final.shp";
-    // std::string shpFilePath = "/home/jinhu/Work/Data/2023.04.30-MAMBO/DK/MolsBjerge/Polygons/molslab/molslab.shp";
-    // std::string shpFilePath = "/home/jinhu/Work/Data/2023.04.30-MAMBO/FR/FR_Bagnas_fusionne/perimetre_bagnas_fusionne_20221123.shp";
-    // std::string shpFilePath = "/home/jinhu/Work/Data/2023.04.19-MAMBO/FR/FR_Bagnas_fusionne/perimetre_bagnas_fusionne_20221123.shp";
-    // std::string shpFilePath = "/home/jinhu/shapefile_RDnew/translated/RDNew.shp";
-    // std::string shpFilePath = "/home/jinhu/Work/Data/2023.10.25-AHN4/Kaartbladen_AHN4_poly/Kaartbladen_AHN4_poly.shp";
-    std::string shpFilePath = "/home/jinhu/Downloads/fenced_bound_proj_AHN4/fenced_bound_proj_AHN4.shp";
-    //  std::string shpFilePath = "/home/jinhu/Work/Data/2023.04.28-Oost_8cm_images/polygons/debug/Oost2.shp";
-    //  std::string lasDir = "/home/jinhu/Work/Data/2023.04.19-MAMBO/NL/LiDAR/retiled/C_26AN2_Retiled";
-    //  std::string lasDir = "/home/jinhu/Work/Data/2023.04.30-MAMBO/DK/MolsBjerge/PointClouds";
-    // std::string lasDir = "/home/jinhu/Work/Data/2023.04.30-MAMBO/FR/PointClouds";
-    std::string lasDir = "/home/jinhu/Downloads/26BZ1";
-    // std::string lasDir = "/home/jinhu/Work/Data/2023.04.30-MAMBO/FR/PointClouds/LIDARHD_1-0_LAZ_MQ-0742_6247-2021/LIDARHD_1-0_LAZ_MQ-0742_6247-2021";
-    // std::string lasDir = "/home/jinhu/Work/Data/2023.04.19-MAMBO/FR/PointClouds";
+    std::string shpFilePath = "/directory/to/shapefile.shp";
+    std::string lasDir = "/directory/to/las/files/";
 
     mm::ClipLas *clip = new mm::ClipLas;
 
@@ -129,8 +103,13 @@ int main(int argc, char **argv)
     clip->readShpFile2();
     clip->getPositivePolygons();
     clip->setLasFileDirName(lasDir);
-    // clip->getAllLasFiles();
-    clip->runClipping3();
+    clip->runClipping();
+
+    if (clip)
+    {
+        delete clip;
+        clip = nullptr;
+    }
 
     return 0;
 }
@@ -139,45 +118,4 @@ void usage(char *argv)
 {
     std::cout << "Usage:" << std::endl;
     std::cout << argv << " [Path of *.shp file] [Directory of LAS/LAZ files]" << std::endl;
-}
-
-int main_works(int argc, char **argv)
-{
-    if (argc <= 1 || argc != 4)
-    {
-        usage(argv[0]);
-        return 1;
-    }
-
-    std::string shpFilePath = argv[1];
-    std::string lasDir = argv[2];
-    std::string outDir = argv[3];
-
-    if (shpFilePath.empty())
-    {
-        std::cout << "Shape file is not found." << std::endl;
-        return 1;
-    }
-    if (lasDir.empty())
-    {
-        std::cout << "LAS/LAZ file direcotry is not found." << std::endl;
-        return 1;
-    }
-    std::cout << "===========================================================================" << std::endl;
-    std::cout << "The input shapefile is: [ " << shpFilePath << " ]" << std::endl;
-    std::cout << "The input directory of [las/laz] file is: [ " << lasDir << " ]" << std::endl;
-    std::cout << "---------------------------------------------------------------------------" << std::endl;
-    mm::ClipLas *clip = new mm::ClipLas;
-    clip->setShpFilePath(shpFilePath);
-    clip->readShpFile2();
-    clip->getPositivePolygons();
-    clip->setLasFileDirName(lasDir, outDir);
-    clip->getAllLasFiles();
-    std::cout << "The clipping is in progress...." << std::endl;
-
-    clip->runClipping2();
-    std::cout << "The clipping is done." << std::endl;
-    std::cout << "===========================================================================" << std::endl;
-
-    return 0;
 }
