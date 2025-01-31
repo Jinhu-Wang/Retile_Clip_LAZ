@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 
 ```
 
-### Module 2: [TreeIndividualization]
+### Module 2: [retiling]
 
 This module performs the individual tree delineation from the classified **[trees&shrubs]** points.
 There are three parameters:
@@ -117,55 +117,85 @@ There are three parameters:
     miniPtsPerCluster: The minimum number of points that defines a cluster.
 ```
 
-Below shows an example on the usage of Module [TreeIndividualization]:
+This module performs the re-tiling of LARGE LAS/LAZ files, which provides two sub-modules: 1. [retile_by_count] - This module re-tiles the original LAS/LAZ file with the given number of new tiles in **X** and **Y** directions. 2. [retile_by_size] - This module re-tiels the original LAS/LAZ file with the given size of new tiles in **X** and **Y** directions.
+
+There are three parameters for each of the two sub-modules.
+
+In case of [retile_by_count]:
+
+```
+    std::string in_las_dir: The full path to the directory where the LARGE LAS/LAZ files are.
+    const int num_x:        The specified number of new tiles in **X** direction.
+    const int num_y:        The specified number of new tiles in **Y** direction.
+```
+
+and in case of [retile_by_size]:
+
+```
+    std::string in_las_dir: The full path to the directory where the LARGE LAS/LAZ files are.
+    const float sizeX:        The specified length of new tiles in **X** direction.
+    const float sizeY:        The specified length of new tiles in **Y** direction.
+```
+
+Below shows an example on the usage of Module [retiling]:
 
 ```javascript {.line-numbers}
-void main()
+
+[retile_by_count]
+
+
+int main()
 {
-    /// The directory of the input directory;
-    std::string las_dir = "path\to\input\las\files";
+    // Specify the directory to the LARGE LAS/LAZ files;
+    std::string inLasDir = "/home/jinhu/Work/Data/2023.04.19-MAMBO/NL/LiDAR/retiled";
 
-    /// The output directory of the output tree individualization;
-    std::string out_dir = "path\to\output\las\files";
+    // Specify the number of new tiles in the two axes directions;
+    const int numX = 40;
+    const int numY = 40;
 
-    /// Get all the las files in the given directory;
-    std::vector<std::string> las_files;
-    ListFilesInDirectory(las_dir, las_files);
 
-    /// Parameters;
+    mm::Retile *retile = new mm::Retile;
+    retile->setInputDir(inLasDir);
+    retile->setRetileCount(numX, numY);
+    retile->retileByCount();
 
-    // The radius for neighbourhood searching.
-    const double radius = 2.0;
-    // The vertical resolution;
-    const double verticalResolution = 0.5;
-    // The minimum number of points for a cluster;
-    const int miniPtsPerCluster = 10;
-
-    /// Individualize the trees from the point cloud data;
-    for (size_t i = 0; i < las_files.size(); ++i)
+    // Clean memory;
+    if (retile)
     {
-        std::vector<Point3D> treePts;
-
-        std::string las_file_path = las_dir + las_files[i];
-        treePts = readLasFile(las_file_path.c_str());
-
-        FoxTree *foxTree = new FoxTree(treePts, radius, verticalResolution, miniPtsPerCluster);
-
-        foxTree->separateTrees(1, 1);
-        std::string outputTree = out_dir + las_files[i] + ".xyz";
-        foxTree->outputTrees(outputTree.c_str(), foxTree->m_nTrees);
-        std::cout << "File: " << las_files[i] << " finished." << std::endl;
-
-        if (foxTree)
-        {
-            delete foxTree;
-            foxTree = nullptr;
-        }
+        delete retile;
+        retile = nullptr;
     }
-
-    return;
+    return 0;
 }
 
+
+[retile_by_size]
+
+int main()
+{
+    mm::Retile *retile = new mm::Retile;
+
+    // Specify the directory to the LARGE LAS/LAZ files;
+    retile->setInputDir("/dir/to/las/files/");
+
+    // Specify the size of new tiles in the two axes directions;
+    const float sizeX = 500.0f;
+    const float sizeY = 500.0f;
+
+    retile->setRetileSize(sizeX, sizeY);
+    retile->retileBySize();
+
+    // Clean memory;
+    if (retile)
+    {
+        delete retile;
+        retile = nullptr;
+    }
+
+    std::cout << "The retiling is done." << std::endl;
+
+    return 0;
+}
 ```
 
 ## License
