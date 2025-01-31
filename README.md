@@ -32,10 +32,10 @@ project_directory/
 |
 |
 └── retiling/                                 # Directory holds the source codes
-    ├── retile_by_count/                      # C++ scripts of classify trees from reedbeds vegetation
+    ├── retile_by_count/                      # C++ scripts of retile by number of tiles
     |        ├── src/                         # Source codes
     |        └── CMakeLists.txt               # Configuration using CMake tool
-    └── retile_by_size/                       # C++ scripts of individualize single trees
+    └── retile_by_size/                       # C++ scripts of retile by size in two directions
              ├── src/                         # Source codes
              └── CMakeLists.txt               # Configuration using CMake tool
 ```
