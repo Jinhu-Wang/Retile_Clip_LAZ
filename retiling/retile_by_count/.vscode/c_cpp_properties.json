@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}",
+                "/usr/include",
+                "/usr/local/include",
+                "/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/LAStools/LASlib/inc/",
+                "/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/LAStools/LASzip/src/"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}
