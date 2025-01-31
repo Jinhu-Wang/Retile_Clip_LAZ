@@ -135,7 +135,7 @@ and in case of [retile_by_size]:
     const float sizeY:        The specified length of new tiles in **Y** direction.
 ```
 
-Below shows an example on the usage of Module [retiling]:
+Below shows two examples on the usage of Module [retiling] using [retile_by_count] and [retile_by_size] respectively:
 
 ```javascript {.line-numbers}
 
