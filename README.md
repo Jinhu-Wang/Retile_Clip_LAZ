@@ -54,7 +54,7 @@ To use the scripts, a `C++` compiler, i.e. `g++`,`gcc`, `mscv`, `clang++`, etc.,
 
   - On Linux or maxOS, simply:
     ```
-    $ cd path-to-root-dir-of-Trees
+    $ cd path-to-dir
     $ mkdir release  && cd release
     $ cmake -DCMAKE_BUILD_TYPE=release ..
     $ make
@@ -66,7 +66,7 @@ To use the scripts, a `C++` compiler, i.e. `g++`,`gcc`, `mscv`, `clang++`, etc.,
 
 ### Module 1: [clipping]
 
-This module clips the LiDAR point clouds in LAS/LAS format w.r.t. the polygons (with \*.shp format).
+This module clips the LiDAR point clouds in LAS/LAS format w.r.t. the polygons (with *.shp format).
 
 There are two parameters to specify:
 
@@ -147,7 +147,7 @@ Below shows an example on the usage of Module [retiling]:
 int main()
 {
     // Specify the directory to the LARGE LAS/LAZ files;
-    std::string inLasDir = "/home/jinhu/Work/Data/2023.04.19-MAMBO/NL/LiDAR/retiled";
+    std::string inLasDir = "/dir/to/las/files/";
 
     // Specify the number of new tiles in the two axes directions;
     const int numX = 40;
