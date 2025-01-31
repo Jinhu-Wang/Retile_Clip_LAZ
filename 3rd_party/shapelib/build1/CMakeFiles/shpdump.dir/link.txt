@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/shpdump.dir/shpdump.c.o -o shpdump  -Wl,-rpath,:::::::::::::: libshp.a -lm 

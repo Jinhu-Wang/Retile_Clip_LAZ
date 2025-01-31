@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/dbfdump.dir/dbfdump.c.o -o dbfdump  -Wl,-rpath,:::::::::::::: libshp.a -lm 

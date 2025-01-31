@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/shpadd.dir/shpadd.c.o -o shpadd  -Wl,-rpath,:::::::::::::: libshp.a -lm 

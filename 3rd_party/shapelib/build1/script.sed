@@ -1,0 +1,10 @@
+s?\./shpcreate?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/shpcreate?
+s?\./shpadd?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/shpadd?
+s?\./shpdump?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/shpdump?
+s?\./shprewind?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/shprewind?
+s?\./dbfcreate?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/dbfcreate?
+s?\./dbfadd?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/dbfadd?
+s?\./dbfdump?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/dbfdump?
+s?\./shptreedump?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/shptreedump?
+s?\./shptest?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/shptest?
+s?\./shputils?/home/jinhu/Work/Projects/Jinhu-Wang/3rdParty/shapelib/build1/shputils?

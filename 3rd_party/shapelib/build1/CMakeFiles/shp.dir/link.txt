@@ -1,0 +1,2 @@
+/usr/bin/ar qc libshp.a CMakeFiles/shp.dir/shpopen.c.o CMakeFiles/shp.dir/dbfopen.c.o CMakeFiles/shp.dir/safileio.c.o CMakeFiles/shp.dir/shptree.c.o CMakeFiles/shp.dir/sbnsearch.c.o
+/usr/bin/ranlib libshp.a

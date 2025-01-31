@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/shprewind.dir/shprewind.c.o -o shprewind  -Wl,-rpath,:::::::::::::: libshp.a -lm 

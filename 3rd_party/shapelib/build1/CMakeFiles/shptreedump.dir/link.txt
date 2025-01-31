@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/shptreedump.dir/shptreedump.c.o -o shptreedump  -Wl,-rpath,:::::::::::::: libshp.a -lm 

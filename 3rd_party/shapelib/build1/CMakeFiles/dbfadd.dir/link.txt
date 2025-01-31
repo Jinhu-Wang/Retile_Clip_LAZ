@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/dbfadd.dir/dbfadd.c.o -o dbfadd  -Wl,-rpath,:::::::::::::: libshp.a -lm 
