@@ -106,16 +106,9 @@ int main(int argc, char **argv)
 
 ### Module 2: [retiling]
 
-This module performs the individual tree delineation from the classified **[trees&shrubs]** points.
-There are three parameters:
-
-```
-    radius: The neighbourhood size used for neighbourhood searching;
-    verticalResolution: The vertical slicing resolution;
-    miniPtsPerCluster: The minimum number of points that defines a cluster.
-```
-
-This module performs the re-tiling of LARGE LAS/LAZ files, which provides two sub-modules: 1. [retile_by_count] - This module re-tiles the original LAS/LAZ file with the given number of new tiles in **X** and **Y** directions. 2. [retile_by_size] - This module re-tiels the original LAS/LAZ file with the given size of new tiles in **X** and **Y** directions.
+This module performs the re-tiling of LARGE LAS/LAZ files, which provides two sub-modules: 
+1. [retile_by_count] - This module re-tiles the original LAS/LAZ file with the given number of new tiles in **X** and **Y** directions. 
+2. [retile_by_size] - This module re-tiels the original LAS/LAZ file with the given size of new tiles in **X** and **Y** directions.
 
 There are three parameters for each of the two sub-modules.
 
